@@ -10,13 +10,15 @@ import pathlib
 path = getattr(sys, '_MEIPASS', os.getcwd())
 os.chdir(path)
 
-# print('Hello to Photo converter')
-# fullname = input('What is your file name including the extension? (press enter when you done)\n')
+
 image_path = sys.argv[1]
 output_dir = sys.argv[2]
+
+# for debug
 # assert os.path.isfile(image_path)
 # image_path = r'C:\Users\priel\Downloads\old_projects\PhotoConverter\pic3.pdf'
 # output_dir = r'C:\Users\priel\Downloads\old_projects\PhotoConverter'
+
 fullname = ntpath.basename(image_path)
 name, ext = fullname.split('.')
 NewFullName = name + '.pdf'
@@ -30,6 +32,7 @@ if ext == 'pdf':
     image_path = os.path.join(str(pathlib.Path(image_path).parent.absolute()), f'{name}.jpg')
     for page in pages:
         page.save(image_path, 'JPEG')
+
 # print('\nThe default converts are:\n\nBlack and white convert,\nResize image to 1660 on 2260 pixels(200DPI if prints on A4),\nConvert to pdf type,\n\nConverts starting...')
 DPI_200_SIZE_FOR_A4 = (1654, 2339)
 image_file = Image.open(image_path) # open colour image
@@ -39,12 +42,14 @@ image_file = image_file.convert('RGB')
 
 image_file.save(New_image_path, format='pdf', optimize=True)
 
+MAX_IMAGE_SIZE = 100000
+QUALITY = 1
 # print(f'New picture size is {int(os.stat(New_image_path).st_size)//1000} KB after first compression')
-if os.stat(New_image_path).st_size > 100000:
+if os.stat(New_image_path).st_size > MAX_IMAGE_SIZE:
     # print('The size is still big after first compression, execute second compression...')
     os.remove(New_image_path)
-    # qualityNum = 1
-    image_file.save(New_image_path, format='pdf', optimize=True, quality=1)
+
+    image_file.save(New_image_path, format='pdf', optimize=True, quality=QUALITY)
     # print(f'New picture size is {int(os.stat(New_image_path).st_size)//1000} KB after second compression')
 
 #optional increase quality
